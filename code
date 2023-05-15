@@ -1,0 +1,431 @@
+// Online C++ compiler to run C++ program online
+
+#include <iostream> 
+#include <vector>
+#include <fstream>
+#include <string>
+
+using namespace std;
+using std::cout; using std::cin;
+using std::endl; using std::string;
+using std::to_string;
+  
+class Base
+{
+protected:
+public:
+virtual void print() = 0;
+virtual string getContent() = 0;
+Base() {
+            cout<<"Constructor of base called" << endl;
+            }
+};
+
+class Parcel: public Base  
+{
+    string content;
+public:
+    Parcel():Base(){ content = "empty";}
+    Parcel(string j):Base() { 
+        content = j; 
+        cout << "Parcel generated" << endl;
+    }
+    void print() { 
+        cout << content << " is in the parcel." << endl; 
+    }
+    
+    void setContent(string content){
+        this -> content = content;
+    }
+    
+    string getContent(){
+        return content;
+    }
+};
+
+class ParcelCar: public Base
+{
+    Parcel* parcel;
+public:
+    ParcelCar():Base() { parcel = new Parcel(); }
+    ParcelCar(string j):Base() { 
+        parcel = new Parcel(j);
+        cout << "ParcelCar created" << endl;
+    }
+    void print() { 
+        parcel -> print();
+    }
+    
+    void setContent(string content){
+        parcel -> setContent(content);
+    }
+    
+    string getContent(){
+        return parcel -> getContent();
+    }
+};
+class PassengerCar: public Base
+{
+    int numppl;
+public:
+    PassengerCar():Base() { numppl = 0; }
+    PassengerCar(int i):Base() {
+        numppl = i; 
+        cout << "PassengerCar made" << endl;
+    }
+    void print() { 
+        cout << numppl << " is on the train car." << endl; 
+    }
+    
+    void setnumppl(int numppl){
+        this -> numppl = numppl;
+    }
+    
+    int getnumppl(){
+        return numppl;
+    }
+    
+    string getContent(){
+        return to_string(numppl) + " people";
+    }
+    
+};
+
+class MaterialCar: public Base
+{
+    string material;
+    int amount;
+public:
+    MaterialCar():Base() { material = "", amount = 0; }
+    MaterialCar(string i, int j):Base() {
+        material = i; 
+        amount = j;
+        cout << "MaterialCar made" << endl;
+    }
+    void print() { 
+        cout << amount <<" "<< material << " is on the train car." << endl; 
+    }
+    
+    void setMaterial(string material){
+        this -> material = material;
+    }
+    
+    string getMaterial(){
+        return material;
+    }
+    
+    void setAmount(int amount){
+        this -> amount = amount;
+    }
+    
+    int getAmount(){
+        return amount;
+    }
+    
+    string getContent(){
+        return to_string(amount) + " " + material;
+    }
+};
+
+class Node{
+    public:
+   Base* data;
+   Node* next;
+   Node* prev;
+   
+   Node (){
+       data = new ParcelCar();    
+       next = nullptr;
+       prev = nullptr;
+   }
+   
+   Node (string thing){
+        data = new ParcelCar(thing);
+        this -> next = nullptr;
+        this -> prev = nullptr;
+   }
+   
+   Node (string thing, int amount){
+        data = new MaterialCar(thing, amount);
+        this -> next = nullptr;
+        this -> prev = nullptr;
+   }
+   
+   Node (int ppl){
+        data = new PassengerCar(ppl);
+        this -> next = nullptr;
+        this -> prev = nullptr;
+   }
+};
+
+
+class Linkedlist{
+    Node* head;
+    
+    public: 
+    
+    Linkedlist(){
+        head = nullptr;
+    }
+    
+    void insertParcelCar(string);
+    
+    void insertMaterialCar(string, int);
+    
+    void insertPassengerCar(int);
+
+    void printList();
+    
+    void deleteNode(int);
+    
+    void searchList(string);
+};
+
+void Linkedlist::searchList(string target){
+    Node* tempPtr = head;
+    int count = 0;
+    if (head == nullptr){
+        cout << "Train is empty." << endl;
+        return;
+    }else{
+        while(tempPtr != nullptr){
+            if (tempPtr -> data -> getContent() == target){
+                count++;
+            }
+            tempPtr = tempPtr -> next;
+        }
+        if (count == 0){
+            cout << target << " is not found on the train." << endl;
+        }
+        else{
+            cout << "Number of " << target << " on the train: " << count << endl;
+        }
+    }
+    delete tempPtr;
+};
+
+
+void Linkedlist::deleteNode(int nodeOffset){
+    Node* temp1 = head, *temp2 = nullptr;
+    int ListLen = 0;
+    
+    if(head == nullptr){
+        cout << "List empty." << endl;
+        return;
+    }
+    
+    while (temp1 != nullptr){
+        temp1 = temp1 -> next;
+        ListLen++;
+    }
+    if (ListLen < nodeOffset){
+        cout << "Index out of range" << endl;
+        return;
+    }
+    
+    temp1 = head;
+    
+    if (nodeOffset == 1){
+        head = head -> next;
+        head -> prev = nullptr;
+        delete temp1;
+        return;
+    }
+    
+    while (nodeOffset-- > 1){
+        temp2 = temp1;
+        temp1 = temp1 -> next;
+    }
+    
+    temp2 -> next = temp1 -> next;
+    delete temp1;
+}
+
+void Linkedlist::insertParcelCar(string data)
+{
+    // Create the new Node.
+    Node* newNode = new Node(data);
+  
+    // Assign to head
+    if (head == NULL) {
+        head = newNode;
+        return;
+    }
+  
+    // Traverse till end of list
+    Node* temp = head;
+    while (temp->next != NULL) {
+  
+        // Update temp
+        temp = temp->next;
+    }
+  
+    // Insert at the last.
+    temp->next = newNode;
+    newNode -> prev = temp;
+}
+
+void Linkedlist::insertMaterialCar(string data, int data2)
+{
+    // Create the new Node.
+    Node* newNode = new Node(data, data2);
+  
+    // Assign to head
+    if (head == NULL) {
+        head = newNode;
+        return;
+    }
+  
+    // Traverse till end of list
+    Node* temp = head;
+    while (temp->next != NULL) {
+  
+        // Update temp
+        temp = temp->next;
+    }
+  
+    // Insert at the last.
+    temp->next = newNode;
+    newNode -> prev = temp;
+}
+
+void Linkedlist::insertPassengerCar(int data)
+{
+    // Create the new Node.
+    Node* newNode = new Node(data);
+  
+    // Assign to head
+    if (head == NULL) {
+        head = newNode;
+        return;
+    }
+  
+    // Traverse till end of list
+    Node* temp = head;
+    while (temp->next != NULL) {
+  
+        // Update temp
+        temp = temp->next;
+    }
+  
+    // Insert at the last.
+    temp->next = newNode;
+    newNode -> prev = temp;
+}
+
+void Linkedlist::printList()
+{
+    Node* temp = head;
+  
+    // Check for empty list.
+    if (head == NULL) {
+        cout << "List empty" << endl;
+        return;
+    }
+  
+    // Traverse the list.
+    while (temp != NULL) {
+        cout << temp->data->getContent() << ", ";
+        temp = temp->next;
+    }
+    cout << endl;
+}
+
+void runMenu(Linkedlist train){
+    bool availableOption = true;
+    while (availableOption)
+    {
+         cout << "\n--------------------------------------------\n"
+             << "Options menu:\n"
+             <<"insert\n"
+             << "search\n"
+             <<"delete\n"
+             << "print\n"
+             <<"logout\n"
+             <<"choose the option you want to demostrate: "<<endl;
+        string inputOption;
+
+        getline (cin, inputOption) ;
+        if(inputOption == "search"){
+            cout<<"Input the item you want to search"<<endl;
+            string searchedItem;
+            getline (cin, searchedItem) ;
+            train.searchList(searchedItem);
+        }
+        else if (inputOption == "insert"){
+            cout<<"Input the item you want to insert"<<endl;
+            string insertItem;
+            getline (cin, insertItem) ;
+            train.insertParcelCar(insertItem);
+        }
+        else if(inputOption=="print"){
+            cout<<"Train printing..."<<endl;
+            train.printList();
+        }
+        else if(inputOption=="delete"){
+            cout<<"Input the item you want to delete"<<endl;
+            int deletenode;
+            cin >> deletenode;
+            train.deleteNode(deletenode);
+        }
+        else if(inputOption=="logout"){
+            availableOption=false;
+            cout<<"Done"<<endl;
+        }
+        else{
+            cout<<"Error! the function does not exist"<<endl;
+        }
+    }
+
+}
+
+int main() 
+{ 
+    Linkedlist train;
+    	train.searchList("Coal");
+	
+	train.insertMaterialCar("Lumber",10);
+	train.insertParcelCar("Coal");
+	train.insertPassengerCar(10);
+	train.insertParcelCar("Package");
+	train.insertParcelCar("Coal");
+	train.insertParcelCar("Coal");
+	train.insertParcelCar("Coal");
+
+	
+	
+	train.searchList("Coal");
+	train.searchList("coal");
+	train.printList();
+	
+	train.deleteNode(7);
+	train.printList();
+	
+	train.deleteNode(1);
+	train.printList();
+	
+	train.deleteNode(1);
+	train.printList();
+	
+	train.deleteNode(1);
+	train.printList();
+	
+	train.deleteNode(1);
+	train.printList();
+	
+	train.deleteNode(1);
+	train.printList();
+
+    train.deleteNode(1);
+	train.printList();
+	
+
+	
+
+	  
+	return 0; 
+ } // end main ()
+
+
+ 
+
