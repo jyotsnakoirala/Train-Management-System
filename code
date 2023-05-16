@@ -218,6 +218,10 @@ void Linkedlist::deleteNode(int nodeOffset){
         temp1 = temp1 -> next;
         ListLen++;
     }
+    if(ListLen == 1){
+        head = nullptr;
+        return;
+    }
     if (ListLen < nodeOffset){
         cout << "Index out of range" << endl;
         return;
@@ -295,7 +299,7 @@ void Linkedlist::insertPassengerCar(int data)
     Node* newNode = new Node(data);
   
     // Assign to head
-    if (head == NULL) {
+    if (head == nullptr) {
         head = newNode;
         return;
     }
@@ -318,7 +322,7 @@ void Linkedlist::printList()
     Node* temp = head;
   
     // Check for empty list.
-    if (head == NULL) {
+    if (head == nullptr) {
         cout << "List empty" << endl;
         return;
     }
@@ -329,48 +333,80 @@ void Linkedlist::printList()
         temp = temp->next;
     }
     cout << endl;
+};
+
+
+void insertNodeChoice(Linkedlist* train){
+    cout << "\n--------------------------------------------\n"
+             << "Options menu:\n"
+             <<"1) Passenger Car\n"
+             << "2) Parcel Car\n"
+             <<"3) Material Car\n"
+             <<"Please enter type train car you want to create: ";
+    int inputOption;
+    cin >> inputOption;
+    
+    if (inputOption == 1){
+        int numppl;
+        cout << "Please enter the number of people on this car: ";
+        cin >> numppl;
+        train -> insertPassengerCar(numppl);
+    }
+    else if (inputOption == 2){
+        string content;
+        cout << "Please enter the item that will be on this train: ";
+        cin >> content;
+        train -> insertParcelCar(content);
+    }
+    else if (inputOption == 3){
+        string content;
+        int num;
+        cout << "Please enter the item that will be on this train: ";
+        cin >> content;
+        
+        cout << "Please enter the amount of the item that will be on this train: ";
+        cin >> num;
+        train -> insertMaterialCar(content, num);
+    }
+
 }
 
-void runMenu(Linkedlist train){
+void runMenu(Linkedlist* train){
     bool availableOption = true;
     while (availableOption)
     {
          cout << "\n--------------------------------------------\n"
              << "Options menu:\n"
-             <<"insert\n"
-             << "search\n"
-             <<"delete\n"
-             << "print\n"
-             <<"logout\n"
-             <<"choose the option you want to demostrate: "<<endl;
-        string inputOption;
-
-        getline (cin, inputOption) ;
-        if(inputOption == "search"){
-            cout<<"Input the item you want to search"<<endl;
+             <<"1) Insert\n"
+             << "2) Search\n"
+             <<"3) Delete\n"
+             << "4) Print\n"
+             <<"5) Logout\n"
+             <<"Enter the number for the action you want to perform: ";
+        int inputOption;
+        cin >> inputOption;
+        if(inputOption == 2){
+            cout<<"Please enter contents you want to search: ";
             string searchedItem;
-            getline (cin, searchedItem) ;
-            train.searchList(searchedItem);
+            cin >> searchedItem;
+            train -> searchList(searchedItem);
         }
-        else if (inputOption == "insert"){
-            cout<<"Input the item you want to insert"<<endl;
-            string insertItem;
-            getline (cin, insertItem) ;
-            train.insertParcelCar(insertItem);
+        else if (inputOption == 1){
+            insertNodeChoice(train);
         }
-        else if(inputOption=="print"){
+        else if(inputOption==4){
             cout<<"Train printing..."<<endl;
-            train.printList();
+            train -> printList();
         }
-        else if(inputOption=="delete"){
-            cout<<"Input the item you want to delete"<<endl;
+        else if(inputOption==3){
+            cout<<"Please enter the index of the train car you want to remove: ";
             int deletenode;
             cin >> deletenode;
-            train.deleteNode(deletenode);
+            train -> deleteNode(deletenode);
         }
-        else if(inputOption=="logout"){
+        else if(inputOption==5){
             availableOption=false;
-            cout<<"Done"<<endl;
+            cout<<"Thank you!"<<endl;
         }
         else{
             cout<<"Error! the function does not exist"<<endl;
@@ -379,53 +415,16 @@ void runMenu(Linkedlist train){
 
 }
 
+
 int main() 
 { 
     Linkedlist train;
-    	train.searchList("Coal");
-	
-	train.insertMaterialCar("Lumber",10);
-	train.insertParcelCar("Coal");
-	train.insertPassengerCar(10);
-	train.insertParcelCar("Package");
-	train.insertParcelCar("Coal");
-	train.insertParcelCar("Coal");
-	train.insertParcelCar("Coal");
+    Linkedlist* trainptr = &train;
 
-	
-	
-	train.searchList("Coal");
-	train.searchList("coal");
-	train.printList();
-	
-	train.deleteNode(7);
-	train.printList();
-	
-	train.deleteNode(1);
-	train.printList();
-	
-	train.deleteNode(1);
-	train.printList();
-	
-	train.deleteNode(1);
-	train.printList();
-	
-	train.deleteNode(1);
-	train.printList();
-	
-	train.deleteNode(1);
-	train.printList();
-
-    train.deleteNode(1);
-	train.printList();
-	
-
-	
-
+    runMenu(trainptr);
 	  
 	return 0; 
  } // end main ()
 
 
  
-
