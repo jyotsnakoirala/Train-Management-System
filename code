@@ -15,7 +15,7 @@ public:
 virtual void print() = 0;
 virtual string getContent() = 0;
 Base() {
-            cout<<"Constructor of base called" << endl;
+
             }
 };
 
@@ -26,7 +26,7 @@ public:
     Parcel():Base(){ content = "empty";}
     Parcel(string j):Base() { 
         content = j; 
-        cout << "Parcel generated" << endl;
+
     }
     void print() { 
         cout << content << " is in the parcel." << endl; 
@@ -321,7 +321,7 @@ void Linkedlist::printList()
   
     // Check for empty list.
     if (head == nullptr) {
-        cout << "List empty" << endl;
+        cout << "Train empty" << endl;
         return;
     }
   
@@ -336,13 +336,16 @@ void Linkedlist::printList()
 
 void insertNodeChoice(Linkedlist* train){
     cout << "\n--------------------------------------------\n"
-             << "Options menu:\n"
+             << "Car selection:\n"
              <<"1) Passenger Car\n"
              << "2) Parcel Car\n"
              <<"3) Material Car\n"
              <<"Please enter type train car you want to create: ";
     int inputOption;
     cin >> inputOption;
+    
+    string temp;
+    getline(cin, temp);
     
     if (inputOption == 1){
         int numppl;
@@ -353,14 +356,14 @@ void insertNodeChoice(Linkedlist* train){
     else if (inputOption == 2){
         string content;
         cout << "Please enter the item that will be on this train: ";
-        cin >> content;
+        getline(cin, content);
         train -> insertParcelCar(content);
     }
     else if (inputOption == 3){
         string content;
         int num;
         cout << "Please enter the item that will be on this train: ";
-        cin >> content;
+        getline(cin, content);
         
         cout << "Please enter the amount of the item that will be on this train: ";
         cin >> num;
@@ -383,10 +386,14 @@ void runMenu(Linkedlist* train){
              <<"Enter the number for the action you want to perform: ";
         int inputOption;
         cin >> inputOption;
+        
+        string temp;
+        getline(cin, temp);
+        
         if(inputOption == 2){
             cout<<"Please enter contents you want to search: ";
             string searchedItem;
-            cin >> searchedItem;
+            getline(cin, searchedItem);
             train -> searchList(searchedItem);
         }
         else if (inputOption == 1){
@@ -420,32 +427,11 @@ int main()
     Linkedlist* trainptr = &train;
 
     runMenu(trainptr);
-    fstream myFile;
-    myFile.open("Parcel.txt", ios::out);//Write
-        if(myFile.is_open()){
-            myFile<< "Coal\n";
-            myFile<< "Steel\n";
-            myFile<< "TV\n";
-            myFile<< "bubblewrap\n";
-            myFile<< "Iphone\n";
-            myFile<< "ipad\n";
-            myFile.close();
-        }
-    myFile.open("Parcel.txt", ios::in); //read
-    if (myFile.is_open()){
 
-    }
 	  
 	return 0; 
  } // end main ()
-{ 
-    Linkedlist train;
-    Linkedlist* trainptr = &train;
 
-    runMenu(trainptr);
-	  
-	return 0; 
- } // end main ()
 
 
  
