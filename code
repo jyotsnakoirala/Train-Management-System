@@ -48,7 +48,7 @@ public:
     ParcelCar():Base() { parcel = new Parcel(); }
     ParcelCar(string j):Base() { 
         parcel = new Parcel(j);
-        cout << "ParcelCar created" << endl;
+        cout << "ParcelCar created";
     }
     void print() { 
         parcel -> print();
@@ -72,7 +72,7 @@ public:
         cout << "PassengerCar made" << endl;
     }
     void print() { 
-        cout << numppl << " is on the train car." << endl; 
+        cout << numppl << " is on this passenger car." << endl; 
     }
     
     void setnumppl(int numppl){
@@ -84,7 +84,7 @@ public:
     }
     
     string getContent(){
-        return to_string(numppl) + " people";
+        return to_string(numppl);
     }
     
 };
@@ -101,7 +101,7 @@ public:
         cout << "MaterialCar made" << endl;
     }
     void print() { 
-        cout << amount <<" "<< material << " is on the train car." << endl; 
+        cout << amount <<" "<< material << " is on this material car" << endl; 
     }
     
     void setMaterial(string material){
@@ -121,7 +121,7 @@ public:
     }
     
     string getContent(){
-        return to_string(amount) + " " + material;
+        return material;
     }
 };
 
@@ -327,7 +327,7 @@ void Linkedlist::printList()
   
     // Traverse the list.
     while (temp != NULL) {
-        cout << temp->data->getContent() << ", ";
+        temp->data->print();
         temp = temp->next;
     }
     cout << endl;
